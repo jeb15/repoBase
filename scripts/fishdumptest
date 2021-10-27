@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Script to create a database and tables, no permissions needed.
+
+mysql -u root -p << EOF
+
+    DROP DATABASE IF EXISTS fishdumptest;
+        CREATE DATABASE fishdumptest;
+            USE fishdumptest;
+                
+                CREATE TABLE fish (
+                                   fish_id INT NOT NULL AUTO_INCREMENT,
+                                   common_name VARCHAR(25),
+                                   scientific_name VARCHAR(25),
+                                   family VARCHAR(25),
+                                   trophic VARCHAR(25),
+                                   PRIMARY KEY (fish_id)
+                                   );
+                
+                CREATE TABLE location (
+                                   loc_id INT NOT NULL AUTO_INCREMENT,
+                                   study_area VARCHAR(25),
+                                   region VARCHAR(25),
+                                   sub_region VARCHAR(25),
+                                   batch_code INTEGER(25),
+                                   PRIMARY KEY (loc_id)
+                                   );
+                
+                CREATE TABLE survey (
+                                   s_index VARCHAR(25),
+                                   loc_id INTEGER(25),
+                                   date VARCHAR(10),
+                                   management VARCHAR(25),
+                                   structure_type VARCHAR(25),
+                                   latitude VARCHAR(25),
+                                   longitude VARCHAR(25),
+                                   PRIMARY KEY (s_index),
+                                   FOREIGN KEY (loc_id) REFERENCES location(loc_id)
+                                   );
+                
+                
+               CREATE TABLE fish_info (
+                                   info_id INT NOT NULL AUTO_INCREMENT,
+                                   fish_id INTEGER(25),
+                                   s_index VARCHAR(25),
+                                   fish_count VARCHAR(25),
+                                   fish_lenght VARCHAR(25),
+                                   PRIMARY KEY (info_id),
+                                   FOREIGN KEY (fish_id) REFERENCES fish(fish_id),
+                                   FOREIGN KEY (s_index) REFERENCES survey(s_index)
+                                   );                    
+                
+EOF
+
